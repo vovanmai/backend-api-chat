@@ -65,6 +65,16 @@ class SendMessage implements ShouldBroadcastNow
                 ]);
             }
         ]);
+
+        $this->message->load([
+            'sender' => function ($query) {
+                return $query->select([
+                    'id',
+                    'full_name',
+                ]);
+            },
+        ]);
+
         return [
             'channel' => $this->channel,
             'message' => $this->message,
