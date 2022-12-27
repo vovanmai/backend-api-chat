@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use App\Services\User\RegisterService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -80,14 +81,13 @@ class AuthenticateController extends Controller
     public function register(RegisterRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
 
         try {
-            $user = User::create($data);
+            $user = resolve(RegisterService::class)->handle($data);
             return response()->success([
                 'data' => $user,
             ]);
-        } catch (Exception $exception) {dd($exception->getMessage());
+        } catch (Exception $exception) {
             return response()->error($exception);
         }
     }
