@@ -48,11 +48,60 @@ class DatabaseSeeder extends Seeder
             '#f208e8',
             '#7b2808',
         ];
+
+        $names = [
+            'Lionel Vo',
+            'Hồng Quân',
+            'Anh Dũng',
+            'Anh Minh',
+            'Chí Kiên',
+            'Đăng Khoa',
+            'Chiến Thắng',
+            'Đức Tài',
+            'Đình Trung',
+            'Gia Huy',
+            'Hải Đăng',
+            'Huy Hoàng',
+            'Hữu Đạt',
+            'Hùng Cường',
+            'Hoàng Phi',
+            'Mạnh Khôi',
+            'Kiến Văn',
+            'Hữu Phước',
+            'Khôi Vĩ',
+            'Mạnh Hùng',
+            'Huyền Anh',
+            'Thùy Anh',
+            'Tú Anh',
+            'Diệu Anh',
+            'Nguyệt Ánh',
+            'Mỹ Châm',
+            'Bích Diệp',
+            'Thu Diệp',
+            'Minh Khuê',
+            'Bích Liên',
+            'Ánh Ngọc',
+            'Quỳnh Châu',
+            'Thanh Bích',
+            'Bảo Vy',
+            'Hoài An',
+            'Khả Hân',
+            'Linh Chi',
+            'Thanh Hà',
+            'An Nhiên',
+            'Quỳnh Anh',
+            'Phương Linh',
+            'Thiên Bình',
+            'Thanh Thảo',
+        ];
         $users = [];
-        for ($i = 1; $i<= 50; $i++) {
+        $nameLength = count($names);
+        for ($i = 0; $i < $nameLength; $i++) {
+            $name = $names[$i];
+            $email = $this->convertName($name) . '@gmail.com';
             $users[] = User::create([
-                'full_name' => 'Fullname ' . $i,
-                'email' => "test{$i}@gmail.com",
+                'full_name' => $names[$i],
+                'email' => $email,
                 'password' => Hash::make('secret'),
                 'color' => $colors[array_rand($colors)],
             ]);
@@ -61,8 +110,10 @@ class DatabaseSeeder extends Seeder
         $chatChannels = [];
 
         foreach ($users as $key => $user) {
-            if ($key > 0) { break; }
             foreach ($users as $item) {
+                if ($user->id == $item->id || $this->check($chatChannels, $user->id, $item->id)) {
+                    continue;
+                }
                 $chatChannels[] = [
                     'sender_id' => $user->id,
                     'receiver_id' => $item->id,
@@ -74,5 +125,41 @@ class DatabaseSeeder extends Seeder
         }
 
         DB::table('chat_channels')->insert($chatChannels);
+    }
+
+    public function check(array $chatChannels, $userId1, $userId2)
+    {
+        $item = array_filter($chatChannels, function ($value) use ($userId1, $userId2) {
+            return ($value['sender_id'] == $userId1 && $value['receiver_id'] == $userId2)
+                || ($value['sender_id'] == $userId2 && $value['receiver_id'] == $userId1);
+        });
+
+        return !empty($item);
+    }
+
+    public function convertName($str)
+    {
+        $unicode = array(
+            'a'=>'á|à|ả|ã|ạ|ă|ắ|ặ|ằ|ẳ|ẵ|â|ấ|ầ|ẩ|ẫ|ậ',
+            'd'=>'đ',
+            'e'=>'é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ',
+            'i'=>'í|ì|ỉ|ĩ|ị',
+            'o'=>'ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ',
+            'u'=>'ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự',
+            'y'=>'ý|ỳ|ỷ|ỹ|ỵ',
+            'A'=>'Á|À|Ả|Ã|Ạ|Ă|Ắ|Ặ|Ằ|Ẳ|Ẵ|Â|Ấ|Ầ|Ẩ|Ẫ|Ậ',
+            'D'=>'Đ',
+            'E'=>'É|È|Ẻ|Ẽ|Ẹ|Ê|Ế|Ề|Ể|Ễ|Ệ',
+            'I'=>'Í|Ì|Ỉ|Ĩ|Ị',
+            'O'=>'Ó|Ò|Ỏ|Õ|Ọ|Ô|Ố|Ồ|Ổ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ở|Ỡ|Ợ',
+            'U'=>'Ú|Ù|Ủ|Ũ|Ụ|Ư|Ứ|Ừ|Ử|Ữ|Ự',
+            'Y'=>'Ý|Ỳ|Ỷ|Ỹ|Ỵ',
+            ''=>' ',
+        );
+
+        foreach($unicode as $nonUnicode=>$uni){
+            $str = preg_replace("/($uni)/i", $nonUnicode, $str);
+        }
+        return strtolower($str);
     }
 }
