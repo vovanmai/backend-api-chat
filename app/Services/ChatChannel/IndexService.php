@@ -6,6 +6,7 @@ use App\Data\Repositories\Eloquent\ChatChannelRepository;
 use App\Data\Repositories\Eloquent\ChatMessageRepository;
 use App\Models\ChatMessage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class IndexService
 {
@@ -41,8 +42,18 @@ class IndexService
 
         return $this->chatChannelRepo
             ->with([
-                'sender',
-                'receiver',
+                'sender' => function($query) {
+                    return $query->select([
+                        '*',
+                        DB::raw('false as active'),
+                    ]);
+                },
+                'receiver' => function($query) {
+                    return $query->select([
+                        '*',
+                        DB::raw('false as active'),
+                    ]);
+                },
                 'unreadMessageTotal',
             ])
             ->orderBy('last_message_at', 'DESC')

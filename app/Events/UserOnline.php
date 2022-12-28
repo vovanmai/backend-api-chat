@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -26,11 +26,11 @@ class UserOnline implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('test-channel');
+        return new PresenceChannel('user-online');
     }
 
     public function broadcastAs()
     {
-        return 'my-test-channel';
+        return 'UserOnline';
     }
 }

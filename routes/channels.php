@@ -18,9 +18,13 @@ Broadcast::channel('chat-to-channel-{channelId}', function ($channelId, $user) {
 });
 
 Broadcast::channel('chat-user-{userId}', function ($userId, $user) {
-    return $user;
+    return true;
 });
 
 Broadcast::channel('react-in-{channelId}', function ($channelId, $user) {
+    return true;
+});
+
+Broadcast::channel('user-online', function ($user) {
     return $user;
 });
