@@ -11,6 +11,7 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "onecentlin/laravel-adminer": "^6.0",
         "predis/predis": "^2.0",
         "prettus/l5-repository": "^2.8",
         "pusher/pusher-php-server": "^7.2"

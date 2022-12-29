@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\ResponseServiceProvider::class,
+        Onecentlin\Adminer\ServiceProvider::class,
 
     ],
 
