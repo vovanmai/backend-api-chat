@@ -49,12 +49,16 @@ class SendMessage implements ShouldBroadcastNow
                 return $query->select([
                     'id',
                     'full_name',
+                    'color',
+                    \DB::raw('false as active'),
                 ]);
             },
             'receiver' => function ($query) {
                 return $query->select([
                     'id',
                     'full_name',
+                    'color',
+                    \DB::raw('false as active'),
                 ]);
             },
             'unreadMessageTotal' => function ($query) {
